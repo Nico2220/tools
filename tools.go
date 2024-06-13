@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-type Wapper map[string]any
+
 
 func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 
@@ -37,7 +37,7 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 	return nil
 }
 
-func WriteJSON(w http.ResponseWriter, status int, data Wapper, headers http.Header ) error {
+func WriteJSON(w http.ResponseWriter, status int, data any, headers http.Header ) error {
 	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
