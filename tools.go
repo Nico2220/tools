@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+type wapper map[string]any
+
 func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 
 	dec := json.NewDecoder(r.Body)
@@ -31,6 +33,27 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 		default:
 			return err
 		}
+	}
+	return nil
+}
+
+func WriteJSON(w http.ResponseWriter, status int, data wapper, headers http.Header ) error {
+	js, err := json.MarshalIndent(data, "", "\t")
+	if err != nil {
+		return err
+	}
+
+	js = append(js, '\n')
+
+	for key, value := range headers {
+		w.Header()[key] = value
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	_, err = w.Write(js)
+	if err != nil {
+		return err
 	}
 
 	return nil
